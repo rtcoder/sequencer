@@ -2,9 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sequencer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="app">
 
+    <div class="sequencer"></div>
+
+    <div class="samples">
+        Add
+        <select>
+            <option value="drum_kit_1">Drum kit 1</option>
+            <option value="drum_kit_2">Drum kit 2</option>
+            <option value="piano">Piano</option>
+        </select>
+        <div class="list-tones"></div>
+    </div>
+
+    <div class="controls">
+        <button class="play">Play</button>
+        <button class="stop">Stop</button>
+
+        <label>
+            Tempo:
+            <input type="number" min="0" value="100" class="tempo">
+        </label>
+    </div>
+
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>
