@@ -24,7 +24,7 @@ class Sequencer {
                 const row = e.target.closest('.row');
                 const index = row.dataset.index;
                 e.target.classList.toggle('active');
-                this.sounds[index].states = [...row.querySelectorAll('.step')].map(el => {
+                this.sounds[index].steps = [...row.querySelectorAll('.step')].map(el => {
                     return el.classList.contains('active');
                 });
             }
@@ -34,6 +34,11 @@ class Sequencer {
                 row.classList.toggle('inactive');
                 this.sounds[index].active = !row.classList.contains('inactive');
                 console.log(this.sounds);
+            }
+            if (e.target.matches('.delete')) {
+                const row = e.target.closest('.row');
+                const index = row.dataset.index;
+                this.removeNote(index);
             }
         });
         document.querySelector('.samples select').addEventListener('change', e => {
@@ -52,10 +57,11 @@ class Sequencer {
                 }
             }
         });
-        const playButton = document.querySelector('button.play');
         const stopButton = document.querySelector('button.stop');
-        playButton.addEventListener('click', this.playSequence.bind(this));
-        stopButton.addEventListener('click', this.stopSequence.bind(this));
+        document.querySelector('button.play')
+            .addEventListener('click', this.playSequence.bind(this));
+        document.querySelector('button.stop')
+            .addEventListener('click', this.stopSequence.bind(this));
         document.querySelector('.tempo').addEventListener('change', e => {
             this.tempo = e.target.value;
             if (this.isPlaying) {
@@ -119,13 +125,13 @@ class Sequencer {
             tunesSet,
             audio,
             active: true,
-            states: Array(this.stepsCount).fill(false),
+            steps: Array(this.stepsCount).fill(false),
         });
         this.renderSequencer();
     }
 
     removeNote(index) {
-
+        this.sounds.splice(index, 1);
         this.renderSequencer();
     }
 
@@ -136,12 +142,12 @@ class Sequencer {
 
     getRow(sound, index) {
         const led = `<div class="state-led ${sound.active ? '' : 'inactive'}"></div>`;
-        const btns = sound.states.map(val =>
-             `<button class="step ${val ? 'active' : ''}"></button>`
+        const btns = sound.steps.map(val =>
+            `<button class="step ${val ? 'active' : ''}"></button>`,
         ).join('');
         const stepsDiv = `<div class="steps">${btns}</div>`;
         const soundName = `<div class="sound-name">${sound.tunesSet}-${sound.noteName}</div>`;
-        const del = `<div class="delete" data-index="${index}">&times;</div>`
+        const del = `<div class="delete" data-index="${index}">&times;</div>`;
         const control = `<div class="note-control">${del}${led}${soundName}</div>`;
         return `<div class="row" data-index="${index}" 
                     data-tuneset="${sound.tunesSet}" 
